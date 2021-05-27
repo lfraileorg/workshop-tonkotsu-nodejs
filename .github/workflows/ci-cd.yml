@@ -7,7 +7,7 @@ on:
     branches: [ master ]
     
 env:
-  APP_NAME: 'tonkotsuwindows1'
+  APP_NAME: 'tonkotsuteam1'
 
 jobs:
   build:
@@ -45,9 +45,15 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Unzip artifact
+      run: unzip artifact.zip -d artifact
+      working-directory: "source"
+        
     - name: Azure WebApp
       uses: Azure/webapps-deploy@v2
       with:
         app-name: ${{ env.APP_NAME }}
         slot-name: staging
-        package: drop.zip
+        package: source
+        startup-command: npm start
